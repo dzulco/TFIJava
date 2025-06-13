@@ -1,6 +1,8 @@
-package com.techlab.model;
+package com.techlab.model.products;
 
-public class Te extends Product implements Descontable{
+import com.techlab.model.Descontable;
+
+public class Te extends Product implements Descontable {
 
     private String variedad;
 
@@ -15,12 +17,18 @@ public class Te extends Product implements Descontable{
     }
 
     @Override
+    public String getDetalle() {
+        return "Variedad: " + variedad;
+    }
+
+    @Override
     public double calcularPrecioFinal() {
         return getPrecio() * 0.95;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "Variedad: " + variedad+"\n";
+        return super.toString() + " Té variedad " + variedad;
     }
+
 }

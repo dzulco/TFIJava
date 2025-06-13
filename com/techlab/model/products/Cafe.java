@@ -1,6 +1,8 @@
-package com.techlab.model;
+package com.techlab.model.products;
 
-public class Cafe extends Product implements Descontable{
+import com.techlab.model.Descontable;
+
+public class Cafe extends Product implements Descontable {
 
     String origen;
 
@@ -21,9 +23,11 @@ public class Cafe extends Product implements Descontable{
 
     @Override
     public String toString() {
-        return super.toString() + "Cafe [origen=" + origen + "]\n";
+        return super.toString() + ", Café de " + origen;
     }
 
-    public void someMethod(int i) {
+    @Override
+    public String getDetalle() {
+        return "Origen: " + origen;
     }
 }

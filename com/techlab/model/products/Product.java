@@ -1,4 +1,4 @@
-package com.techlab.model;
+package com.techlab.model.products;
 
 public abstract class Product {
     private int id=0;
@@ -46,6 +46,9 @@ public abstract class Product {
         this.cantidadEnStock = cantidadEnStock;
     }
 
+    // Método abstracto para obtener detalle específico
+    public abstract String getDetalle();
+
     public abstract double calcularPrecioFinal();
 
     public void descontarStock(int cantidad){
@@ -58,11 +61,9 @@ public abstract class Product {
 
     @Override
     public String toString() {
-        return "Producto{" +
-                "id=" + id +
+        return "Producto #" + id +
                 ", nombre='" + nombre + '\'' +
-                ", precio=" + precio +
-                ", cantidadEnStock=" + cantidadEnStock +
-                '}';
+                ", precio= $" + precio +
+                ", stock=" + cantidadEnStock;
     }
 }

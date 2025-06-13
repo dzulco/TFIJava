@@ -1,5 +1,7 @@
 package com.techlab.model;
 
+import com.techlab.model.products.Product;
+
 import java.util.ArrayList;
 
 
@@ -19,7 +21,10 @@ public class Inventory {
 
     @Override
     public String toString() {
-        return "Listado de productos: {" + products +
-                '}';
+        StringBuffer buffer = new StringBuffer();
+        for (Product product : products) {
+            buffer.append(product.toString() + "\n");
+        }
+        return buffer.toString();
     }
 }

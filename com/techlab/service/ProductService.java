@@ -1,40 +1,56 @@
 package com.techlab.service;
 
+import com.techlab.exceptions.ProductNotFoundException;
 import com.techlab.model.Inventory;
-import com.techlab.model.Product;
+import com.techlab.model.products.Product;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class ProductService {
 
-    public void addProduct (Inventory inventory, Product product) {
-        inventory.getProducts().add(product);
+    InventoryService inventoryService;
+
+    public ProductService() {
+        inventoryService = new InventoryService();
     }
 
-    public boolean removeProductById (Inventory inventory, int id) {
-        Optional<Product> optionalProduct = this.getProductById(inventory, id);
-        boolean flag = false;
-        if (optionalProduct.isPresent()) {
-            inventory.getProducts().remove(optionalProduct.get());
-            flag = true;
-        }
-        return flag;
+    public ArrayList<Product> getProducts() {
+        return inventoryService.getInventory().getProducts();
     }
 
-    public Optional<Product> getProductById (Inventory inventory, int id) {
-       return inventory.getProducts().stream().filter(product -> product.getId() == id).findFirst();
+    public void addProduct (Product product) {
+        inventoryService.getInventory().getProducts().add(product);
     }
 
-    public boolean updateProduct (Inventory inventory, Product product) {
-        Optional<Product> optionalProduct = this.getProductById(inventory, product.getId());
-        boolean flag = false;
-        if (optionalProduct.isPresent()) {
-            optionalProduct.get().setNombre(product.getNombre());
-            optionalProduct.get().setPrecio(product.getPrecio());
-            optionalProduct.get().setCantidadEnStock(product.getCantidadEnStock());
-            flag = true;
-        }
-        return flag;
+    public void removeProductById (int id) throws ProductNotFoundException {
+        Product product = this.getProductById(id);
+        getProducts().remove(product);
     }
 
+
+    public Product getProductById (int id) throws ProductNotFoundException
+    {
+       Optional<Product> productFound = getProducts().stream().filter(product -> product.getId() == id).findFirst();
+       if(productFound.isEmpty()) {
+           throw new ProductNotFoundException("El producto no existe ❌");
+       }
+       return productFound.get();
+
+    }
+
+    public void updateProduct (Product product) throws ProductNotFoundException {
+        Product productUpdate = this.getProductById(product.getId());
+        productUpdate.setNombre(product.getNombre());
+        productUpdate.setPrecio(product.getPrecio());
+        productUpdate.setCantidadEnStock(product.getCantidadEnStock());
+    }
+
+    public Inventory getInventory(){
+        return inventoryService.getInventory();
+    }
+
+    public void decrementQuantity(Product product, Integer cantidad) {
+        product.setCantidadEnStock(product.getCantidadEnStock() - cantidad);
+    }
 }

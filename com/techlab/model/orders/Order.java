@@ -1,4 +1,6 @@
-package com.techlab.model;
+package com.techlab.model.orders;
+
+import com.techlab.model.Client;
 
 import java.util.ArrayList;
 
@@ -10,8 +12,8 @@ public class Order {
     private static int cont = 0;
     private double total;
 
-    public Order(ArrayList<OrderLine> orderLines, OrderState state, Client client) {
-        this.orderLines = orderLines;
+    public Order( OrderState state, Client client) {
+        this.orderLines = new ArrayList<>();
         this.id = cont ++;
         this.state = state;
         this.client = client;
@@ -59,12 +61,11 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "orderLines=" + orderLines +
-                ", client=" + client +
-                ", state=" + state +
-                ", id=" + id +
+        return "Orden #" + id +
                 ", total=$" + total +
-                '}';
+                ", estado=" + state +
+                "," + client +
+                " " + orderLines.toString() +
+                '\n';
     }
 }

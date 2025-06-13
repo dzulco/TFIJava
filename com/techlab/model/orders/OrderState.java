@@ -1,4 +1,4 @@
-package com.techlab.model;
+package com.techlab.model.orders;
 
 public enum OrderState {
     GENERADA,
