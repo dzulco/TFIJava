@@ -5,10 +5,12 @@ import com.techlab.model.products.Product;
 public class OrderLine {
     Product product;
     int quantity;
+    double subTotal;
 
     public OrderLine(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
+        this.subTotal = product.getPrecio() * quantity;
     }
 
     public Product getProduct() {
@@ -27,10 +29,19 @@ public class OrderLine {
         this.quantity = quantity;
     }
 
+    public double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
+    }
+
     @Override
     public String toString() {
         return "Item de orden ->" +
                 " "+ product.toString() +
-                ", cantidad=" + quantity + '\n';
+                ", cantidad=" + quantity +
+                ", subtotal=$" + '\n';
     }
 }

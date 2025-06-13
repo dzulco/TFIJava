@@ -46,11 +46,11 @@ public class ProductService {
         productUpdate.setCantidadEnStock(product.getCantidadEnStock());
     }
 
-    public Inventory getInventory(){
-        return inventoryService.getInventory();
+    public void decrementQuantity(Product product, Integer quantity) {
+        product.descontarStock(quantity);
     }
 
-    public void decrementQuantity(Product product, Integer cantidad) {
-        product.setCantidadEnStock(product.getCantidadEnStock() - cantidad);
+    public Inventory getInventory() {
+        return inventoryService.getInventory();
     }
 }

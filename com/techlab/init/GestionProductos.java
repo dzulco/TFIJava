@@ -2,28 +2,31 @@ package com.techlab.init;
 
 import com.techlab.exceptions.InsufficientStockException;
 import com.techlab.exceptions.ProductNotFoundException;
+import com.techlab.model.Client;
 import com.techlab.model.orders.Order;
-import com.techlab.model.products.Cafe;
-import com.techlab.model.products.Product;
-import com.techlab.model.products.Te;
+import com.techlab.model.orders.OrderPrinter;
+import com.techlab.model.products.*;
 import com.techlab.service.ClientService;
 import com.techlab.service.OrderService;
 import com.techlab.service.ProductService;
 import com.techlab.util.Utils;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 class GestionProductos {
 
-    ProductService productService = new ProductService();
-    OrderService orderService = new OrderService(productService);
-    ClientService clienteService = new ClientService();
+    ProductService productService;
+    OrderService orderService;
+    ClientService clientService;
 
 
     public GestionProductos() {
+        productService = new ProductService();
+        orderService = new OrderService(productService);
+        clientService = new ClientService();
+
         inicializarProductos();
     }
 
@@ -58,14 +61,13 @@ class GestionProductos {
     }
 
     private void listarOrdenes() {
-        System.out.println("=".repeat(35));
-        System.out.println("--- ORDENES - TECHLAB ---");
-        System.out.println("=".repeat(35));
         if(orderService.getOrders().isEmpty()) {
             System.out.println("No hay órdenes cargadas.");
         }else {
-            System.out.println(orderService.getOrders());
-        }
+            for (Order order : orderService.getOrders()) {
+                OrderPrinter.printOrder(order);
+          }
+       }
     }
 
     private void crearOrden() {
@@ -86,7 +88,8 @@ class GestionProductos {
             mapOrden.put(idProducto, cantidadProducto);
         }
         try {
-            Order order = orderService.createOrder(clienteService.generateClient(name, email), mapOrden);
+            Client client = clientService.generateClient(name,email);
+            Order order = orderService.createOrder(client, mapOrden);
             System.out.println("Orden #" + order.getId() + " agregada exitosamente. ✅");
         } catch (ProductNotFoundException | InsufficientStockException e) {
             System.out.println("Error: " + e.getMessage());
@@ -100,7 +103,7 @@ class GestionProductos {
 
         try {
             Product product = productService.getProductById(id);
-            System.out.println(product);
+            ProductPrinter.productPrinter(product);
         }catch (ProductNotFoundException e){
             System.out.println("Error: "+e.getMessage());
         }
@@ -118,18 +121,7 @@ class GestionProductos {
     }
 
     private void listarProductos() {
-        System.out.println();
-        System.out.println("=".repeat(35));
-        System.out.println("--- PRODUCTOS - TECHLAB ---");
-        System.out.println("=".repeat(35));
-        // Encabezado
-        System.out.printf("%-5s %-20s %-10s %-10s %-20s%n", "ID", "Nombre", "Precio", "Stock", "Detalle");
-        System.out.println("----------------------------------------------------------------------");
-
-        for (Product p : productService.getProducts()) {
-            System.out.printf("%-5d %-20s $%-9.2f %-10d %-20s%n",
-                    p.getId(), p.getNombre(), p.getPrecio(), p.getCantidadEnStock(), p.getDetalle());
-        }
+        ProductPrinter.inventoryPrinter(productService.getInventory());
     }
 
     private void agregarProducto() {
@@ -145,12 +137,12 @@ class GestionProductos {
         int opcion=Utils.leerEntero("Ingrese opcion: ");
         switch (opcion) {
             case 1 -> {
-                datosProdComunes record = getDatosProdComunes();
+                DatosProdComunes record = getDatosProdComunes();
                 String origen = Utils.leerCadena("Ingrese origen del café: ");
                 product = new Cafe(record.cantidad(), record.nombre(), record.precio(),origen);
             }
             case 2 -> {
-                datosProdComunes record = getDatosProdComunes();
+                DatosProdComunes record = getDatosProdComunes();
                 String variedad = Utils.leerCadena("Ingrese variedad de té: ");
                 product = new Te(record.cantidad(),record.nombre(),record.precio(),variedad);
             }
@@ -163,15 +155,12 @@ class GestionProductos {
         }
     }
 
-    private static datosProdComunes getDatosProdComunes() {
+    private static DatosProdComunes getDatosProdComunes() {
         String nombre = Utils.leerCadena("Nombre del nuevo producto: ");
         double precio = Utils.leerDouble("Precio del producto: ");
         int cantidad = Utils.leerEntero("Cantidad del producto: ");
-        datosProdComunes record = new datosProdComunes(nombre, precio, cantidad);
+        DatosProdComunes record = new DatosProdComunes(nombre, precio, cantidad);
         return record;
-    }
-
-    private record datosProdComunes(String nombre, double precio, int cantidad) {
     }
 
     private void inicializarProductos(){

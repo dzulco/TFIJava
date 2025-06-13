@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Utils {
     public static int leerEntero(String mensaje) {
         Scanner sc = new Scanner(System.in);
-        System.out.println(mensaje);
+        System.out.print(mensaje);
         while (!sc.hasNextInt()){
             System.out.println("Debe ingresar un numero entero. Intente de nuevo: ");
             sc.next();
@@ -15,13 +15,13 @@ public class Utils {
 
     public static String leerCadena(String mensaje) {
         Scanner sc = new Scanner(System.in);
-        System.out.println(mensaje);
+        System.out.print(mensaje);
         return sc.next();
     }
 
     public static double leerDouble(String s) {
         Scanner sc = new Scanner(System.in);
-        System.out.println(s);
+        System.out.print(s);
         while (!sc.hasNextDouble()){
             System.out.println("Debe ingresar un numero double. Intente de nuevo: ");
             sc.next();
